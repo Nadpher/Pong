@@ -1,25 +1,26 @@
 #include "Engine.h"
 
+// This is really bad.
 Pong::Engine::Engine(Coord pWindowSize)
-	: m_WindowSize(pWindowSize)
 {
 	if (SDL_InitSubSystem(SDL_INIT_VIDEO) < 0)
 	{
-		throw std::wstring(L"Could not initialize SDL");
+		throw std::runtime_error("Could not initialize SDL");
 	}
 
-	InitWindow("Pong!");
+	InitWindow(pWindowSize, "Pong!");
 	InitRenderer();
 }
 
+// TODO: CLEANUP CONSTRUCTORS and fix stuff
 Pong::Engine::Engine(Coord pWindowSize, const char* pWindowTitle)
 {
 	if (SDL_InitSubSystem(SDL_INIT_VIDEO) < 0)
 	{
-		throw std::wstring(L"Could not initialize SDL");
+		throw std::runtime_error("Could not initialize SDL");
 	}
 
-	InitWindow(pWindowTitle);
+	InitWindow(pWindowSize, pWindowTitle);
 	InitRenderer();
 }
 
@@ -30,7 +31,7 @@ void Pong::Engine::Run()
 
 	while (m_Running)
 	{
-		HandleEvents();
+		HandleEvents();	
 
 		Draw();
 	}
@@ -65,20 +66,20 @@ void Pong::Engine::Quit()
 	SDL_Quit();
 }
 
-void Pong::Engine::InitWindow(const char* pWindowTitle)
+void Pong::Engine::InitWindow(Coord pWindowSize, const char* pWindowTitle)
 {
 	m_Window = SDL_CreateWindow(
 		pWindowTitle,
 		SDL_WINDOWPOS_UNDEFINED,
 		SDL_WINDOWPOS_UNDEFINED,
-		m_WindowSize.X,
-		m_WindowSize.Y,
+		pWindowSize.X,
+		pWindowSize.Y,
 		SDL_WINDOW_SHOWN
 	);
 
 	if (m_Window == nullptr)
 	{
-		throw std::wstring(L"Could not initialize SDL window");
+		throw std::runtime_error("Could not initialize SDL window");
 	}
 }
 
@@ -92,6 +93,6 @@ void Pong::Engine::InitRenderer()
 
 	if (m_Renderer == nullptr)
 	{
-		throw std::wstring(L"Could not initialize SDL renderer");
+		throw std::runtime_error("Could not initialize SDL renderer");
 	}
 }

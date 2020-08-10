@@ -6,11 +6,11 @@ int main()
 	try
 	{
 		Pong::Engine Application({ 1024, 786 });
-		
+		Application.Run();
 	}
-	catch (std::wstring& ErrorMessage)
+	catch (std::runtime_error& ErrorMessage)
 	{
-		std::wcerr << ErrorMessage << L"\n";
+		std::cerr << ErrorMessage.what() << L"\n";
 	}
 
 }
