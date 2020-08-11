@@ -1,6 +1,6 @@
 ﻿cmake_minimum_required (VERSION 3.17)
 
-add_executable (Pong "main.cpp" "Engine.h" "Coord.h" "Engine.cpp"    )
+add_executable (Pong "main.cpp" "Engine.h" "Coord.h" "Engine.cpp" "GameBoard.h" "Ball.h" "GameBoard.cpp")
 
 find_package(SDL2 REQUIRED)
 

@@ -1,9 +1,8 @@
 #pragma once
 
-#include "Coord.h"
+#include "GameBoard.h"
 
 #include <SDL.h>
-#include <iostream>
 
 namespace Pong
 {
@@ -22,12 +21,17 @@ namespace Pong
 
 		SDL_Window* m_Window = nullptr;
 		SDL_Renderer* m_Renderer = nullptr;
+
+		GameBoard m_GameBoard;
 		
 		bool m_Running = true;
 		void InitWindow(Coord pWindowSize, const char* pWindowTitle);
 		void InitRenderer();
-		void Draw();
+		
 		void HandleEvents();
 		void Quit();
+
+		void Draw();
+		void DrawBall();
 	};
 }

@@ -1,6 +1,8 @@
 #include "Engine.h"
 #undef main
 
+#include <iostream>
+
 int main()
 {
 	try

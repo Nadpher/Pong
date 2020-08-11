@@ -1,7 +1,9 @@
 #include "Engine.h"
 
-// This is really bad.
+#include <stdexcept>
+
 Pong::Engine::Engine(Coord pWindowSize)
+	: m_GameBoard(pWindowSize)
 {
 	if (SDL_InitSubSystem(SDL_INIT_VIDEO) < 0)
 	{
@@ -12,8 +14,8 @@ Pong::Engine::Engine(Coord pWindowSize)
 	InitRenderer();
 }
 
-// TODO: CLEANUP CONSTRUCTORS and fix stuff
 Pong::Engine::Engine(Coord pWindowSize, const char* pWindowTitle)
+	: m_GameBoard(pWindowSize)
 {
 	if (SDL_InitSubSystem(SDL_INIT_VIDEO) < 0)
 	{
@@ -31,8 +33,8 @@ void Pong::Engine::Run()
 
 	while (m_Running)
 	{
-		HandleEvents();	
-
+		HandleEvents();
+		m_GameBoard.Update();
 		Draw();
 	}
 }
@@ -41,7 +43,25 @@ void Pong::Engine::Draw()
 {
 	SDL_RenderClear(m_Renderer);
 
+	DrawBall();
+
 	SDL_RenderPresent(m_Renderer);
+}
+
+void Pong::Engine::DrawBall()
+{
+	SDL_SetRenderDrawColor(m_Renderer, 255, 255, 255, 255);
+	Coord BallPosition = m_GameBoard.GetBallPosition();
+	int BallRadius = m_GameBoard.GetBallRadius();
+
+	SDL_Rect Ball; // I know it should be a circle but i cant be bothered to implement the midpoint algorithm (or include sdl gfx)
+	Ball.x = BallPosition.X;
+	Ball.y = BallPosition.Y;
+	Ball.w = BallRadius;
+	Ball.h = BallRadius;
+
+	SDL_RenderFillRect(m_Renderer, &Ball);
+	SDL_SetRenderDrawColor(m_Renderer, 0, 0, 0, 255);
 }
 
 void Pong::Engine::HandleEvents()
