@@ -22,7 +22,8 @@ namespace Pong
 			m_Position(pPosition),
 			m_Speed(pSpeedAndRadius.X),
 			m_Radius(pSpeedAndRadius.Y),
-			m_DirectionNormals(pStartingDirection)
+			m_DirectionNormals(pStartingDirection),
+			m_InitialDirection(pStartingDirection)
 		{
 
 		}
@@ -35,7 +36,11 @@ namespace Pong
 		inline void FlipVertical()		 { m_DirectionNormals.Y *= -1;     }
 		inline void FlipHorizontal()	 { m_DirectionNormals.X *= -1;     }
 
-		inline void Reset()				 { m_Position = m_InitialPosition; }
+		inline void Reset()
+		{ 
+			m_DirectionNormals = m_InitialDirection;
+			m_Position = m_InitialPosition;			
+		}
 
 		inline void Move()
 		{
@@ -45,6 +50,7 @@ namespace Pong
 
 	private:
 		const Coord m_InitialPosition;
+		const Coord m_InitialDirection = { 1, 1 };
 		const int m_Speed;
 		const int m_Radius;
 

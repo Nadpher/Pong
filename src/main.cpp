@@ -7,7 +7,7 @@ int main()
 {
 	try
 	{
-		Pong::Engine Application({ 1024, 786 });
+		Pong::Engine Application({ 1024, 768 });
 		Application.Run();
 	}
 	catch (std::runtime_error& ErrorMessage)

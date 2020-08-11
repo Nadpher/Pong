@@ -21,6 +21,7 @@ namespace Pong
 
 		SDL_Window* m_Window = nullptr;
 		SDL_Renderer* m_Renderer = nullptr;
+		const Uint8* m_Keys;
 
 		GameBoard m_GameBoard;
 		
@@ -33,5 +34,6 @@ namespace Pong
 
 		void Draw();
 		void DrawBall();
+		void DrawPaddles();
 	};
 }

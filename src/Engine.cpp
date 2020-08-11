@@ -3,7 +3,7 @@
 #include <stdexcept>
 
 Pong::Engine::Engine(Coord pWindowSize)
-	: m_GameBoard(pWindowSize)
+	: m_GameBoard(pWindowSize), m_Keys(SDL_GetKeyboardState(NULL))
 {
 	if (SDL_InitSubSystem(SDL_INIT_VIDEO) < 0)
 	{
@@ -15,7 +15,7 @@ Pong::Engine::Engine(Coord pWindowSize)
 }
 
 Pong::Engine::Engine(Coord pWindowSize, const char* pWindowTitle)
-	: m_GameBoard(pWindowSize)
+	: m_GameBoard(pWindowSize), m_Keys(SDL_GetKeyboardState(NULL))
 {
 	if (SDL_InitSubSystem(SDL_INIT_VIDEO) < 0)
 	{
@@ -44,6 +44,7 @@ void Pong::Engine::Draw()
 	SDL_RenderClear(m_Renderer);
 
 	DrawBall();
+	DrawPaddles();
 
 	SDL_RenderPresent(m_Renderer);
 }
@@ -64,9 +65,59 @@ void Pong::Engine::DrawBall()
 	SDL_SetRenderDrawColor(m_Renderer, 0, 0, 0, 255);
 }
 
+void Pong::Engine::DrawPaddles()
+{
+	SDL_SetRenderDrawColor(m_Renderer, 255, 255, 255, 255);
+
+	SDL_Rect Paddle;
+	{
+		Coord LeftPaddleSize = m_GameBoard.GetLeftPaddleSize();
+		Coord LeftPaddlePosition = m_GameBoard.GetLeftPaddlePosition();
+
+		Paddle.x = LeftPaddlePosition.X;
+		Paddle.y = LeftPaddlePosition.Y;
+		Paddle.w = LeftPaddleSize.X;
+		Paddle.h = LeftPaddleSize.Y;
+		SDL_RenderFillRect(m_Renderer, &Paddle);
+	}
+
+	{
+		Coord RightPaddleSize = m_GameBoard.GetRightPaddleSize();
+		Coord RightPaddlePosition = m_GameBoard.GetRightPaddlePosition();
+
+		Paddle.x = RightPaddlePosition.X;
+		Paddle.y = RightPaddlePosition.Y;
+		Paddle.w = RightPaddleSize.X;
+		Paddle.h = RightPaddleSize.Y;
+		SDL_RenderFillRect(m_Renderer, &Paddle);
+	}
+
+	SDL_SetRenderDrawColor(m_Renderer, 0, 0, 0, 255);
+}
+
 void Pong::Engine::HandleEvents()
 {
 	SDL_Event Event;
+	SDL_PumpEvents();
+
+	if (m_Keys[SDL_SCANCODE_W])
+	{
+		m_GameBoard.MoveLeftPaddle(GameBoard::Up);
+	}
+	if (m_Keys[SDL_SCANCODE_S])
+	{
+		m_GameBoard.MoveLeftPaddle(GameBoard::Down);
+	}
+
+	if (m_Keys[SDL_SCANCODE_UP])
+	{
+		m_GameBoard.MoveRightPaddle(GameBoard::Up);
+	}
+	if (m_Keys[SDL_SCANCODE_DOWN])
+	{
+		m_GameBoard.MoveRightPaddle(GameBoard::Down);
+	}
+
 	while (SDL_PollEvent(&Event))
 	{
 		switch (Event.type)
@@ -82,6 +133,7 @@ void Pong::Engine::Quit()
 {
 	SDL_DestroyWindow(m_Window);
 	SDL_DestroyRenderer(m_Renderer);
+	delete m_Keys;
 
 	SDL_Quit();
 }

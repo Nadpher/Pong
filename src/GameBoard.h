@@ -1,6 +1,8 @@
 #pragma once
 
 #include "Ball.h"
+#include "Paddle.h"
+#include <vector>
 
 namespace Pong
 {
@@ -8,12 +10,30 @@ namespace Pong
 	{
 	public:
 		GameBoard() = delete;
-		GameBoard(Coord pWindowSize) 
+		
+		// This could be improved
+		GameBoard(Coord pWindowSize)
 			: m_PlayAreaBounds(pWindowSize),
-			m_Ball({ 20, 20 }, { m_PlayAreaBounds.X / 2, m_PlayAreaBounds.Y / 2 })
+			m_Ball({ 10, m_PlayAreaBounds.X / 30 }, { m_PlayAreaBounds.X / 2, m_PlayAreaBounds.Y / 2 })
 		{
+			Paddle LeftPaddle =
+			{
+				{m_PlayAreaBounds.X / 30, m_PlayAreaBounds.Y / 3}, // Size
+				{0, m_PlayAreaBounds.Y / 3},					   // Position
+				20												   // Speed
+			};
 
+			Paddle RightPaddle =
+			{
+				{m_PlayAreaBounds.X / 30, m_PlayAreaBounds.Y / 3},						// Size
+				{m_PlayAreaBounds.X - m_PlayAreaBounds.X / 30, m_PlayAreaBounds.Y / 3},	// Position
+				20																		// Speed
+			};
+
+			m_Paddles.push_back(LeftPaddle);
+			m_Paddles.push_back(RightPaddle);
 		}
+
 
 		~GameBoard() = default;
 
@@ -23,6 +43,14 @@ namespace Pong
 		inline Coord GetBallPosition()   { return m_Ball.GetPosition();			}
 		inline int GetBallRadius()       { return m_Ball.GetRadius();			}
 
+		inline void MoveLeftPaddle(int pDirection)  { m_Paddles[Left].Move(pDirection); }
+		inline void MoveRightPaddle(int pDirection) { m_Paddles[Right].Move(pDirection); }
+
+		inline Coord GetLeftPaddleSize()      { return m_Paddles[Left].GetSize();     }
+		inline Coord GetRightPaddleSize()     { return m_Paddles[Right].GetSize();     }
+		inline Coord GetLeftPaddlePosition()  { return m_Paddles[Left].GetPosition(); }
+		inline Coord GetRightPaddlePosition() { return m_Paddles[Right].GetPosition(); }
+
 		enum Direction
 		{
 			Up = -1,
@@ -31,7 +59,20 @@ namespace Pong
 
 	private:
 		const Coord m_PlayAreaBounds;
-		
+		std::vector<Paddle> m_Paddles = {};
+
 		Ball m_Ball;
+
+		void BallPositionCheck();
+		void PaddleCollisions();
+		void PaddleOOB();
+		bool AABBCollision(Coord Position1, Coord Size1, Coord Position2, Coord Size2);		
+
+		// For readability
+		enum Paddles
+		{
+			Left = 0,
+			Right
+		};
 	};
 }
