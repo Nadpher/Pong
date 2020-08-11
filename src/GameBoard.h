@@ -14,24 +14,22 @@ namespace Pong
 		// This could be improved
 		GameBoard(Coord pWindowSize)
 			: m_PlayAreaBounds(pWindowSize),
-			m_Ball({ 10, m_PlayAreaBounds.X / 30 }, { m_PlayAreaBounds.X / 2, m_PlayAreaBounds.Y / 2 })
+			m_Ball({ 10, m_PlayAreaBounds.X / 30 }, { m_PlayAreaBounds.X / 2, m_PlayAreaBounds.Y / 2 }),
+			m_Paddles{ 
+						{  // Left paddle
+							{m_PlayAreaBounds.X / 30, m_PlayAreaBounds.Y / 3}, // Size Left
+							{0, m_PlayAreaBounds.Y / 3},					   // Position
+							20												   // Speed						
+						}, 
+						   // Right paddle
+						{
+							{m_PlayAreaBounds.X / 30, m_PlayAreaBounds.Y / 3},					    // Size
+							{m_PlayAreaBounds.X - m_PlayAreaBounds.X / 30, m_PlayAreaBounds.Y / 3}, // Position
+							20																		// Speed
+						}
+					 }
 		{
-			Paddle LeftPaddle =
-			{
-				{m_PlayAreaBounds.X / 30, m_PlayAreaBounds.Y / 3}, // Size
-				{0, m_PlayAreaBounds.Y / 3},					   // Position
-				20												   // Speed
-			};
-
-			Paddle RightPaddle =
-			{
-				{m_PlayAreaBounds.X / 30, m_PlayAreaBounds.Y / 3},						// Size
-				{m_PlayAreaBounds.X - m_PlayAreaBounds.X / 30, m_PlayAreaBounds.Y / 3},	// Position
-				20																		// Speed
-			};
-
-			m_Paddles.push_back(LeftPaddle);
-			m_Paddles.push_back(RightPaddle);
+			
 		}
 
 
@@ -66,6 +64,7 @@ namespace Pong
 		void BallPositionCheck();
 		void PaddleCollisions();
 		void PaddleOOB();
+		void Score(int pIndex);
 		bool AABBCollision(Coord Position1, Coord Size1, Coord Position2, Coord Size2);		
 
 		// For readability

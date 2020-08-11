@@ -25,22 +25,25 @@ void Pong::GameBoard::BallPositionCheck()
 	}
 
 	// Position offset to fix bug causing the ball to score before colliding with paddles
-	// The couts are temporary until i include sdl_ttf and draw the score directly on the renderer
+	// The couts are temporary until i include sdl_ttf (ffs) and draw the score directly on the renderer
 	constexpr int POSITION_OFFSET = 10;
 	if (BallPosition.X + BallRadius > m_Paddles[Right].GetPosition().X + POSITION_OFFSET)
 	{
-		m_Paddles[Left].IncreaseScore();
-		std::cout << "Left player score: " << m_Paddles[Left].GetScore() << "\n";
-
-		m_Ball.Reset();
+		Score(Left);
 	}
 	else if (BallPosition.X < m_Paddles[Left].GetPosition().X + m_Paddles[Left].GetSize().X - POSITION_OFFSET)
 	{
-		m_Paddles[Right].IncreaseScore();
-		std::cout << "Right player score: " << m_Paddles[Right].GetScore() << "\n";
-
-		m_Ball.Reset();
+		Score(Right);
 	}
+}
+
+void Pong::GameBoard::Score(int pIndex)
+{
+	m_Paddles[pIndex].IncreaseScore();
+	const char* PlayerString = pIndex == Left ? "Left" : "Right";
+	std::cout << PlayerString << " player score: " << m_Paddles[pIndex].GetScore() << "\n";
+
+	m_Ball.Reset();
 }
 
 void Pong::GameBoard::PaddleCollisions()
